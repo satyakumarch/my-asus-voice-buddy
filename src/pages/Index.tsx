@@ -26,7 +26,7 @@ const Index = () => {
     return () => clearInterval(timer);
   }, []);
 
-  const handleVoiceCommand = (command: string) => {
+  const handleVoiceCommand = async (command: string) => {
     const newCommand: Command = {
       id: Date.now().toString(),
       text: command,
@@ -36,14 +36,97 @@ const Index = () => {
     
     setCommands(prev => [newCommand, ...prev]);
     
-    // Simulate command processing
-    setTimeout(() => {
+    // Process actual system commands
+    try {
+      const result = await processSystemCommand(command.toLowerCase());
+      
       setCommands(prev => prev.map(cmd => 
         cmd.id === newCommand.id 
-          ? { ...cmd, status: 'completed' as const, response: `Executed: ${command}` }
+          ? { ...cmd, status: 'completed' as const, response: result }
           : cmd
       ));
-    }, 2000);
+    } catch (error) {
+      setCommands(prev => prev.map(cmd => 
+        cmd.id === newCommand.id 
+          ? { ...cmd, status: 'error' as const, response: `Error: ${error}` }
+          : cmd
+      ));
+    }
+  };
+
+  const processSystemCommand = async (command: string): Promise<string> => {
+    // Chrome/Browser commands
+    if (command.includes('chrome') || command.includes('browser')) {
+      window.open('https://www.google.com', '_blank');
+      return 'Opening Chrome browser';
+    }
+    
+    // Gmail
+    if (command.includes('gmail') || command.includes('email')) {
+      window.open('https://gmail.com', '_blank');
+      return 'Opening Gmail';
+    }
+    
+    // WhatsApp
+    if (command.includes('whatsapp') || command.includes('whats app')) {
+      window.open('https://web.whatsapp.com', '_blank');
+      return 'Opening WhatsApp Web';
+    }
+    
+    // Social Media
+    if (command.includes('facebook')) {
+      window.open('https://facebook.com', '_blank');
+      return 'Opening Facebook';
+    }
+    
+    if (command.includes('messenger')) {
+      window.open('https://messenger.com', '_blank');
+      return 'Opening Messenger';
+    }
+    
+    // System commands (these will work when deployed as desktop app)
+    if (command.includes('calculator') || command.includes('calc')) {
+      if (typeof (window as any).electronAPI !== 'undefined') {
+        (window as any).electronAPI.openApp('calc');
+        return 'Opening Calculator';
+      }
+      return 'Calculator command received - deploy as desktop app for full functionality';
+    }
+    
+    if (command.includes('notepad') || command.includes('text editor')) {
+      if (typeof (window as any).electronAPI !== 'undefined') {
+        (window as any).electronAPI.openApp('notepad');
+        return 'Opening Notepad';
+      }
+      return 'Notepad command received - deploy as desktop app for full functionality';
+    }
+    
+    if (command.includes('file explorer') || command.includes('files') || command.includes('folder')) {
+      if (typeof (window as any).electronAPI !== 'undefined') {
+        (window as any).electronAPI.openApp('explorer');
+        return 'Opening File Explorer';
+      }
+      return 'File Explorer command received - deploy as desktop app for full functionality';
+    }
+    
+    if (command.includes('shutdown') || command.includes('power off')) {
+      if (typeof (window as any).electronAPI !== 'undefined') {
+        (window as any).electronAPI.shutdown();
+        return 'Shutting down system';
+      }
+      return 'Shutdown command received - deploy as desktop app for full functionality';
+    }
+    
+    if (command.includes('restart') || command.includes('reboot')) {
+      if (typeof (window as any).electronAPI !== 'undefined') {
+        (window as any).electronAPI.restart();
+        return 'Restarting system';
+      }
+      return 'Restart command received - deploy as desktop app for full functionality';
+    }
+    
+    // Default response
+    return `Command "${command}" processed. Web version has limited system access - deploy as desktop app for full functionality.`;
   };
 
   return (
