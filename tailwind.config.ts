@@ -57,6 +57,25 @@ export default {
           border: "hsl(var(--sidebar-border))",
           ring: "hsl(var(--sidebar-ring))",
         },
+        ai: {
+          primary: "hsl(var(--ai-primary))",
+          secondary: "hsl(var(--ai-secondary))",
+          accent: "hsl(var(--ai-accent))",
+          glow: "hsl(var(--ai-glow))",
+        },
+      },
+      backgroundImage: {
+        'gradient-primary': 'var(--gradient-primary)',
+        'gradient-glow': 'var(--gradient-glow)',
+        'gradient-voice': 'var(--gradient-voice)',
+      },
+      boxShadow: {
+        'glow': 'var(--shadow-glow)',
+        'voice': 'var(--shadow-voice)',
+      },
+      transitionTimingFunction: {
+        'smooth': 'var(--transition-smooth)',
+        'bounce': 'var(--transition-bounce)',
       },
       borderRadius: {
         lg: "var(--radius)",
@@ -80,10 +99,48 @@ export default {
             height: "0",
           },
         },
+        "pulse-glow": {
+          "0%, 100%": {
+            boxShadow: "0 0 20px hsl(var(--ai-glow) / 0.3)",
+            transform: "scale(1)",
+          },
+          "50%": {
+            boxShadow: "0 0 40px hsl(var(--ai-glow) / 0.6)",
+            transform: "scale(1.05)",
+          },
+        },
+        "voice-wave": {
+          "0%, 100%": {
+            transform: "scaleY(1)",
+          },
+          "50%": {
+            transform: "scaleY(2)",
+          },
+        },
+        "float": {
+          "0%, 100%": {
+            transform: "translateY(0px)",
+          },
+          "50%": {
+            transform: "translateY(-10px)",
+          },
+        },
+        "glow-rotate": {
+          "0%": {
+            transform: "rotate(0deg)",
+          },
+          "100%": {
+            transform: "rotate(360deg)",
+          },
+        },
       },
       animation: {
         "accordion-down": "accordion-down 0.2s ease-out",
         "accordion-up": "accordion-up 0.2s ease-out",
+        "pulse-glow": "pulse-glow 2s ease-in-out infinite",
+        "voice-wave": "voice-wave 0.6s ease-in-out infinite",
+        "float": "float 3s ease-in-out infinite",
+        "glow-rotate": "glow-rotate 4s linear infinite",
       },
     },
   },
