@@ -8,9 +8,10 @@ interface VoiceInputProps {
   isListening: boolean;
   onListeningChange: (listening: boolean) => void;
   onCommand: (command: string) => void;
+  onSpeak?: (text: string) => void;
 }
 
-export const VoiceInput = ({ isListening, onListeningChange, onCommand }: VoiceInputProps) => {
+export const VoiceInput = ({ isListening, onListeningChange, onCommand, onSpeak }: VoiceInputProps) => {
   const [transcript, setTranscript] = useState("");
   const [isSupported, setIsSupported] = useState(false);
   const recognitionRef = useRef<SpeechRecognition | null>(null);
@@ -89,11 +90,16 @@ export const VoiceInput = ({ isListening, onListeningChange, onCommand }: VoiceI
   };
 
   const speakText = (text: string) => {
-    if ('speechSynthesis' in window) {
-      const utterance = new SpeechSynthesisUtterance(text);
-      utterance.rate = 0.8;
-      utterance.pitch = 1;
-      speechSynthesis.speak(utterance);
+    if (onSpeak) {
+      onSpeak(text);
+    } else {
+      // Fallback to browser TTS
+      if ('speechSynthesis' in window) {
+        const utterance = new SpeechSynthesisUtterance(text);
+        utterance.rate = 0.8;
+        utterance.pitch = 1;
+        speechSynthesis.speak(utterance);
+      }
     }
   };
 
@@ -152,11 +158,12 @@ export const VoiceInput = ({ isListening, onListeningChange, onCommand }: VoiceI
       <Card className="p-4 bg-card/30 backdrop-blur-sm border-border/30">
         <h3 className="font-medium mb-3 text-ai-primary">Voice Commands</h3>
         <div className="grid grid-cols-1 gap-2 text-sm text-muted-foreground">
-          <div>"Open Chrome" - Launch applications</div>
-          <div>"Send email to..." - Email automation</div>
-          <div>"WhatsApp message..." - Messaging</div>
+          <div>"Open Calculator" - Launch desktop apps</div>
+          <div>"Open Notepad" - Text editor</div>
+          <div>"Open File Explorer" - File manager</div>
+          <div>"Search Google for..." - Web search</div>
+          <div>"Open WhatsApp" - Messaging</div>
           <div>"Shutdown system" - System control</div>
-          <div>"What's the weather?" - Information</div>
         </div>
         
         <Button

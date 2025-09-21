@@ -6,6 +6,7 @@ import { QuickActions } from "@/components/QuickActions";
 import { Mic, Settings, Power } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
+import { createElevenLabsService } from "@/services/elevenlabs";
 import heroImage from "@/assets/jarvis-hero.jpg";
 
 interface Command {
@@ -20,11 +21,34 @@ const Index = () => {
   const [isListening, setIsListening] = useState(false);
   const [commands, setCommands] = useState<Command[]>([]);
   const [currentTime, setCurrentTime] = useState(new Date());
+  const [elevenLabsService, setElevenLabsService] = useState<any>(null);
+
+  useEffect(() => {
+    // Initialize ElevenLabs service
+    const apiKey = import.meta.env.VITE_ELEVENLABS_API_KEY || process.env.ELEVENLABS_API_KEY;
+    if (apiKey) {
+      setElevenLabsService(createElevenLabsService(apiKey));
+    }
+  }, []);
 
   useEffect(() => {
     const timer = setInterval(() => setCurrentTime(new Date()), 1000);
     return () => clearInterval(timer);
   }, []);
+
+  const handleVoiceSpeak = async (text: string) => {
+    if (elevenLabsService) {
+      await elevenLabsService.textToSpeech(text);
+    } else {
+      // Fallback to browser TTS
+      if ('speechSynthesis' in window) {
+        const utterance = new SpeechSynthesisUtterance(text);
+        utterance.rate = 0.8;
+        utterance.pitch = 1;
+        speechSynthesis.speak(utterance);
+      }
+    }
+  };
 
   const handleVoiceCommand = async (command: string) => {
     const newCommand: Command = {
@@ -45,17 +69,52 @@ const Index = () => {
           ? { ...cmd, status: 'completed' as const, response: result }
           : cmd
       ));
+      
+      // Speak the response
+      await handleVoiceSpeak(result);
     } catch (error) {
+      const errorMessage = `Error: ${error}`;
       setCommands(prev => prev.map(cmd => 
         cmd.id === newCommand.id 
-          ? { ...cmd, status: 'error' as const, response: `Error: ${error}` }
+          ? { ...cmd, status: 'error' as const, response: errorMessage }
           : cmd
       ));
+      
+      // Speak the error
+      await handleVoiceSpeak(errorMessage);
     }
   };
 
   const processSystemCommand = async (command: string): Promise<string> => {
     const isDesktop = typeof (window as any).electronAPI !== 'undefined';
+    
+    // Google search functionality  
+    if (command.includes('search') && (command.includes('google') || command.includes('for'))) {
+      const searchQuery = command.replace(/search|google|for/g, '').trim();
+      const searchUrl = `https://www.google.com/search?q=${encodeURIComponent(searchQuery)}`;
+      
+      if (isDesktop) {
+        await (window as any).electronAPI.openUrl(searchUrl);
+        return `Searching Google for: ${searchQuery}`;
+      } else {
+        window.open(searchUrl, '_blank');
+        return `Opened Google search for: ${searchQuery}`;
+      }
+    }
+
+    // YouTube search
+    if (command.includes('youtube') && command.includes('search')) {
+      const searchQuery = command.replace(/youtube|search/g, '').trim();
+      const youtubeUrl = `https://www.youtube.com/results?search_query=${encodeURIComponent(searchQuery)}`;
+      
+      if (isDesktop) {
+        await (window as any).electronAPI.openUrl(youtubeUrl);
+        return `Searching YouTube for: ${searchQuery}`;
+      } else {
+        window.open(youtubeUrl, '_blank');
+        return `Opened YouTube search for: ${searchQuery}`;
+      }
+    }
     
     // Desktop Applications
     if (command.includes('calculator') || command.includes('calc')) {
@@ -255,6 +314,7 @@ const Index = () => {
               isListening={isListening}
               onListeningChange={setIsListening}
               onCommand={handleVoiceCommand}
+              onSpeak={handleVoiceSpeak}
             />
           </div>
           
