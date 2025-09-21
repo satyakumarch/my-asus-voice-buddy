@@ -55,78 +55,155 @@ const Index = () => {
   };
 
   const processSystemCommand = async (command: string): Promise<string> => {
-    // Chrome/Browser commands
-    if (command.includes('chrome') || command.includes('browser')) {
-      window.open('https://www.google.com', '_blank');
-      return 'Opening Chrome browser';
-    }
+    const isDesktop = typeof (window as any).electronAPI !== 'undefined';
     
-    // Gmail
-    if (command.includes('gmail') || command.includes('email')) {
-      window.open('https://gmail.com', '_blank');
-      return 'Opening Gmail';
-    }
-    
-    // WhatsApp
-    if (command.includes('whatsapp') || command.includes('whats app')) {
-      window.open('https://web.whatsapp.com', '_blank');
-      return 'Opening WhatsApp Web';
-    }
-    
-    // Social Media
-    if (command.includes('facebook')) {
-      window.open('https://facebook.com', '_blank');
-      return 'Opening Facebook';
-    }
-    
-    if (command.includes('messenger')) {
-      window.open('https://messenger.com', '_blank');
-      return 'Opening Messenger';
-    }
-    
-    // System commands (these will work when deployed as desktop app)
+    // Desktop Applications
     if (command.includes('calculator') || command.includes('calc')) {
-      if (typeof (window as any).electronAPI !== 'undefined') {
-        (window as any).electronAPI.openApp('calc');
-        return 'Opening Calculator';
+      if (isDesktop) {
+        return await (window as any).electronAPI.openApp('calculator');
       }
-      return 'Calculator command received - deploy as desktop app for full functionality';
+      return 'Calculator command received - run as desktop app for full functionality';
     }
     
     if (command.includes('notepad') || command.includes('text editor')) {
-      if (typeof (window as any).electronAPI !== 'undefined') {
-        (window as any).electronAPI.openApp('notepad');
-        return 'Opening Notepad';
+      if (isDesktop) {
+        return await (window as any).electronAPI.openApp('notepad');
       }
-      return 'Notepad command received - deploy as desktop app for full functionality';
+      return 'Notepad command received - run as desktop app for full functionality';
     }
     
     if (command.includes('file explorer') || command.includes('files') || command.includes('folder')) {
-      if (typeof (window as any).electronAPI !== 'undefined') {
-        (window as any).electronAPI.openApp('explorer');
-        return 'Opening File Explorer';
+      if (isDesktop) {
+        return await (window as any).electronAPI.openApp('explorer');
       }
-      return 'File Explorer command received - deploy as desktop app for full functionality';
+      return 'File Explorer command received - run as desktop app for full functionality';
     }
     
-    if (command.includes('shutdown') || command.includes('power off')) {
-      if (typeof (window as any).electronAPI !== 'undefined') {
-        (window as any).electronAPI.shutdown();
-        return 'Shutting down system';
+    if (command.includes('paint') || command.includes('drawing')) {
+      if (isDesktop) {
+        return await (window as any).electronAPI.openApp('paint');
       }
-      return 'Shutdown command received - deploy as desktop app for full functionality';
+      return 'Paint command received - run as desktop app for full functionality';
+    }
+    
+    if (command.includes('word') || command.includes('document')) {
+      if (isDesktop) {
+        return await (window as any).electronAPI.openApp('word');
+      }
+      return 'Word command received - run as desktop app for full functionality';
+    }
+    
+    if (command.includes('excel') || command.includes('spreadsheet')) {
+      if (isDesktop) {
+        return await (window as any).electronAPI.openApp('excel');
+      }
+      return 'Excel command received - run as desktop app for full functionality';
+    }
+    
+    if (command.includes('control panel') || command.includes('settings')) {
+      if (isDesktop) {
+        return await (window as any).electronAPI.openApp('control');
+      }
+      return 'Control Panel command received - run as desktop app for full functionality';
+    }
+    
+    if (command.includes('task manager')) {
+      if (isDesktop) {
+        return await (window as any).electronAPI.openApp('taskmgr');
+      }
+      return 'Task Manager command received - run as desktop app for full functionality';
+    }
+    
+    // System Commands
+    if (command.includes('shutdown') || command.includes('power off')) {
+      if (isDesktop) {
+        return await (window as any).electronAPI.systemCommand('shutdown');
+      }
+      return 'Shutdown command received - run as desktop app for full functionality';
     }
     
     if (command.includes('restart') || command.includes('reboot')) {
-      if (typeof (window as any).electronAPI !== 'undefined') {
-        (window as any).electronAPI.restart();
-        return 'Restarting system';
+      if (isDesktop) {
+        return await (window as any).electronAPI.systemCommand('restart');
       }
-      return 'Restart command received - deploy as desktop app for full functionality';
+      return 'Restart command received - run as desktop app for full functionality';
+    }
+    
+    if (command.includes('sleep') || command.includes('hibernate')) {
+      if (isDesktop) {
+        return await (window as any).electronAPI.systemCommand('sleep');
+      }
+      return 'Sleep command received - run as desktop app for full functionality';
+    }
+    
+    if (command.includes('lock') || command.includes('lock screen')) {
+      if (isDesktop) {
+        return await (window as any).electronAPI.systemCommand('lock');
+      }
+      return 'Lock command received - run as desktop app for full functionality';
+    }
+    
+    // Web Applications (work in both web and desktop)
+    if (command.includes('chrome') || command.includes('browser')) {
+      if (isDesktop) {
+        return await (window as any).electronAPI.openUrl('https://www.google.com');
+      } else {
+        window.open('https://www.google.com', '_blank');
+        return 'Opening Chrome browser';
+      }
+    }
+    
+    if (command.includes('gmail') || command.includes('email')) {
+      if (isDesktop) {
+        return await (window as any).electronAPI.openUrl('https://gmail.com');
+      } else {
+        window.open('https://gmail.com', '_blank');
+        return 'Opening Gmail';
+      }
+    }
+    
+    if (command.includes('whatsapp') || command.includes('whats app')) {
+      if (isDesktop) {
+        return await (window as any).electronAPI.openUrl('https://web.whatsapp.com');
+      } else {
+        window.open('https://web.whatsapp.com', '_blank');
+        return 'Opening WhatsApp Web';
+      }
+    }
+    
+    if (command.includes('facebook')) {
+      if (isDesktop) {
+        return await (window as any).electronAPI.openUrl('https://facebook.com');
+      } else {
+        window.open('https://facebook.com', '_blank');
+        return 'Opening Facebook';
+      }
+    }
+    
+    if (command.includes('messenger')) {
+      if (isDesktop) {
+        return await (window as any).electronAPI.openUrl('https://messenger.com');
+      } else {
+        window.open('https://messenger.com', '_blank');
+        return 'Opening Messenger';
+      }
+    }
+    
+    // Email sending
+    if (command.includes('send email') || command.includes('compose email')) {
+      if (isDesktop) {
+        const emailData = {
+          to: '',
+          subject: 'Message from JARVIS',
+          body: 'Hello from your AI assistant!'
+        };
+        return await (window as any).electronAPI.sendEmail(emailData);
+      }
+      return 'Email composition - run as desktop app for full functionality';
     }
     
     // Default response
-    return `Command "${command}" processed. Web version has limited system access - deploy as desktop app for full functionality.`;
+    return `Command "${command}" processed. ${isDesktop ? 'Desktop functionality active!' : 'Run as desktop app for full system control.'}`;
   };
 
   return (

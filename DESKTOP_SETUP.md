@@ -2,11 +2,11 @@
 
 ## 🚀 Make Your Voice Assistant Control Your Laptop
 
-Your voice assistant is now configured with Capacitor for desktop deployment. Follow these steps to run it natively on your ASUS Windows laptop with real system control.
+Your voice assistant is now configured with **Electron** for desktop deployment. Follow these steps to run it natively on your ASUS Windows laptop with **FULL SYSTEM CONTROL**.
 
 ## 📋 Prerequisites
 
-1. **Node.js** (v16 or later) - Download from [nodejs.org](https://nodejs.org/)
+1. **Node.js** (v18 or later) - Download from [nodejs.org](https://nodejs.org/)
 2. **Git** - Download from [git-scm.com](https://git-scm.com/)
 
 ## 🔧 Setup Instructions
@@ -25,21 +25,22 @@ Your voice assistant is now configured with Capacitor for desktop deployment. Fo
 npm install
 ```
 
-### Step 3: Add Electron Platform
+### Step 3: Run in Development Mode
 ```bash
-npm install --save-dev @capacitor-community/electron
-npx cap add @capacitor-community/electron
+# Start the development server with desktop functionality
+npm run electron-dev
 ```
 
-### Step 4: Build the Project
+### Step 4: Build Desktop App (Optional)
 ```bash
-npm run build
-npx cap sync electron
+# Build for production distribution
+npm run build-electron
 ```
 
-### Step 5: Run Desktop App
+### Step 5: Create Installer (Optional)
 ```bash
-npx cap run electron
+# Create Windows installer
+npm run dist
 ```
 
 ## 🎯 What Works Now
