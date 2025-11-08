@@ -73,6 +73,14 @@ ipcMain.handle('open-app', async (event, appName) => {
       case 'control-panel':
         command = 'control';
         break;
+      case 'powershell':
+      case 'power-shell':
+        command = 'powershell';
+        break;
+      case 'settings':
+      case 'windows-settings':
+        command = 'start ms-settings:';
+        break;
       case 'mspaint':
       case 'paint':
         command = 'mspaint';

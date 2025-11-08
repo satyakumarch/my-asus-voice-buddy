@@ -166,11 +166,32 @@ const Index = () => {
       return 'Control Panel command received - run as desktop app for full functionality';
     }
     
-    if (command.includes('task manager')) {
+    if (command.includes('task manager') || command.includes('taskmgr')) {
       if (isDesktop) {
         return await (window as any).electronAPI.openApp('taskmgr');
       }
       return 'Task Manager command received - run as desktop app for full functionality';
+    }
+    
+    if (command.includes('powershell') || command.includes('power shell')) {
+      if (isDesktop) {
+        return await (window as any).electronAPI.openApp('powershell');
+      }
+      return 'PowerShell command received - run as desktop app for full functionality';
+    }
+    
+    if (command.includes('command prompt') || command.includes('cmd')) {
+      if (isDesktop) {
+        return await (window as any).electronAPI.openApp('cmd');
+      }
+      return 'Command Prompt command received - run as desktop app for full functionality';
+    }
+    
+    if (command.includes('windows settings') || (command.includes('settings') && !command.includes('control'))) {
+      if (isDesktop) {
+        return await (window as any).electronAPI.openApp('settings');
+      }
+      return 'Windows Settings command received - run as desktop app for full functionality';
     }
     
     // System Commands

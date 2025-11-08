@@ -158,11 +158,13 @@ export const VoiceInput = ({ isListening, onListeningChange, onCommand, onSpeak 
       <Card className="p-4 bg-card/30 backdrop-blur-sm border-border/30">
         <h3 className="font-medium mb-3 text-ai-primary">Voice Commands</h3>
         <div className="grid grid-cols-1 gap-2 text-sm text-muted-foreground">
-          <div>"Open Calculator" - Launch desktop apps</div>
+          <div>"Open Calculator" - Desktop calculator</div>
           <div>"Open Notepad" - Text editor</div>
-          <div>"Open File Explorer" - File manager</div>
+          <div>"Open PowerShell" - Terminal</div>
+          <div>"Open CMD" - Command Prompt</div>
+          <div>"Open Task Manager" - System monitor</div>
+          <div>"Open Windows Settings" - System settings</div>
           <div>"Search Google for..." - Web search</div>
-          <div>"Open WhatsApp" - Messaging</div>
           <div>"Shutdown system" - System control</div>
         </div>
         
