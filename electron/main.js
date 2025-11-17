@@ -167,3 +167,47 @@ ipcMain.handle('send-email', async (event, emailData) => {
     throw new Error(`Failed to open email composer: ${error.message}`);
   }
 });
+
+ipcMain.handle('open-folder', async (event, folderName) => {
+  const { shell } = require('electron');
+  const os = require('os');
+  const path = require('path');
+  
+  return new Promise((resolve, reject) => {
+    let folderPath;
+    
+    switch (folderName.toLowerCase()) {
+      case 'desktop':
+        folderPath = path.join(os.homedir(), 'Desktop');
+        break;
+      case 'documents':
+        folderPath = path.join(os.homedir(), 'Documents');
+        break;
+      case 'downloads':
+        folderPath = path.join(os.homedir(), 'Downloads');
+        break;
+      case 'pictures':
+        folderPath = path.join(os.homedir(), 'Pictures');
+        break;
+      case 'videos':
+        folderPath = path.join(os.homedir(), 'Videos');
+        break;
+      case 'music':
+        folderPath = path.join(os.homedir(), 'Music');
+        break;
+      default:
+        reject(`Unknown folder: ${folderName}`);
+        return;
+    }
+
+    shell.openPath(folderPath).then((error) => {
+      if (error) {
+        reject(`Failed to open ${folderName}: ${error}`);
+      } else {
+        resolve(`Successfully opened ${folderName} folder`);
+      }
+    }).catch((error) => {
+      reject(`Failed to open ${folderName}: ${error.message}`);
+    });
+  });
+});

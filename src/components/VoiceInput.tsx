@@ -164,6 +164,9 @@ export const VoiceInput = ({ isListening, onListeningChange, onCommand, onSpeak 
           <div>"Open CMD" - Command Prompt</div>
           <div>"Open Task Manager" - System monitor</div>
           <div>"Open Windows Settings" - System settings</div>
+          <div>"Open Desktop" - Desktop folder</div>
+          <div>"Open Documents" - Documents folder</div>
+          <div>"Open Downloads" - Downloads folder</div>
           <div>"Search Google for..." - Web search</div>
           <div>"Shutdown system" - System control</div>
         </div>

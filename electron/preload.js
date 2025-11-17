@@ -7,6 +7,7 @@ contextBridge.exposeInMainWorld('electronAPI', {
   systemCommand: (command) => ipcRenderer.invoke('system-command', command),
   openUrl: (url) => ipcRenderer.invoke('open-url', url),
   sendEmail: (emailData) => ipcRenderer.invoke('send-email', emailData),
+  openFolder: (folderName) => ipcRenderer.invoke('open-folder', folderName),
   
   // System info
   platform: process.platform,

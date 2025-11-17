@@ -194,6 +194,49 @@ const Index = () => {
       return 'Windows Settings command received - run as desktop app for full functionality';
     }
     
+    // Folder Commands
+    if (command.includes('desktop') && command.includes('open')) {
+      if (isDesktop) {
+        return await (window as any).electronAPI.openFolder('desktop');
+      }
+      return 'Desktop folder command received - run as desktop app for full functionality';
+    }
+    
+    if (command.includes('documents') && command.includes('open')) {
+      if (isDesktop) {
+        return await (window as any).electronAPI.openFolder('documents');
+      }
+      return 'Documents folder command received - run as desktop app for full functionality';
+    }
+    
+    if (command.includes('downloads') && command.includes('open')) {
+      if (isDesktop) {
+        return await (window as any).electronAPI.openFolder('downloads');
+      }
+      return 'Downloads folder command received - run as desktop app for full functionality';
+    }
+    
+    if (command.includes('pictures') && command.includes('open')) {
+      if (isDesktop) {
+        return await (window as any).electronAPI.openFolder('pictures');
+      }
+      return 'Pictures folder command received - run as desktop app for full functionality';
+    }
+    
+    if (command.includes('videos') && command.includes('open')) {
+      if (isDesktop) {
+        return await (window as any).electronAPI.openFolder('videos');
+      }
+      return 'Videos folder command received - run as desktop app for full functionality';
+    }
+    
+    if (command.includes('music') && command.includes('open')) {
+      if (isDesktop) {
+        return await (window as any).electronAPI.openFolder('music');
+      }
+      return 'Music folder command received - run as desktop app for full functionality';
+    }
+    
     // System Commands
     if (command.includes('shutdown') || command.includes('power off')) {
       if (isDesktop) {
