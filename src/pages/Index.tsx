@@ -25,7 +25,7 @@ const Index = () => {
 
   useEffect(() => {
     // Initialize ElevenLabs service
-    const apiKey = import.meta.env.VITE_ELEVENLABS_API_KEY || process.env.ELEVENLABS_API_KEY;
+    const apiKey = import.meta.env.VITE_ELEVENLABS_API_KEY;
     if (apiKey) {
       setElevenLabsService(createElevenLabsService(apiKey));
     }
